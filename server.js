@@ -27,6 +27,6 @@ app.use((err, req, res, next) => {
   res.status(500).send({ error: 'An unexpected error occurred' });
 });
 
-// Start the server
+// Start the server (HTTP only)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
