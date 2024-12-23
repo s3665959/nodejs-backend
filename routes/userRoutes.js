@@ -22,9 +22,9 @@ const upload = multer({ storage });
 // Add spending data and calculate points
 router.post('/transactions', upload.single('receiptPhoto'), async (req, res) => {
   try {
-    const { timestamp, userId, branch, receiptNo, spendingValue } = req.body;
+    const { timestamp, userId, branch, receiptNo, spendingValue, staffName } = req.body;
 
-    if (!timestamp || !userId || !branch || !receiptNo || !spendingValue || !req.file) {
+    if (!timestamp || !userId || !branch || !receiptNo || !spendingValue || !req.file || !staffName) {
       return res.status(400).send({ error: 'All fields are required.' });
     }
 
@@ -39,10 +39,10 @@ router.post('/transactions', upload.single('receiptPhoto'), async (req, res) => 
     const points = Math.floor(spendingValue / 25);
     const receiptPhotoUrl = `/uploads/${req.file.filename}`;
 
-    // Insert the transaction record
+    // Insert the transaction record with staffName
     const insertQuery = `
-      INSERT INTO transactions (userId, timestamp, type, branch, receiptPhotoUrl, receiptNo, spendingValue, points, details)
-      VALUES (?, ?, 'spending', ?, ?, ?, ?, ?, 'Spending points added')
+      INSERT INTO transactions (userId, timestamp, type, branch, receiptPhotoUrl, receiptNo, spendingValue, points, staffName, details)
+      VALUES (?, ?, 'spending', ?, ?, ?, ?, ?, ?, 'Spending points added')
     `;
     await db.execute(insertQuery, [
       userId,
@@ -52,6 +52,7 @@ router.post('/transactions', upload.single('receiptPhoto'), async (req, res) => 
       receiptNo,
       spendingValue,
       points,
+      staffName,
     ]);
 
     res.status(201).send({ message: 'Points added successfully', points });
@@ -60,6 +61,7 @@ router.post('/transactions', upload.single('receiptPhoto'), async (req, res) => 
     res.status(500).send({ error: 'Failed to save transaction.', details: error.message });
   }
 });
+
 
 
 // Fetch all points data

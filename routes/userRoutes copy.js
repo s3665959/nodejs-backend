@@ -5,6 +5,7 @@ const router = express.Router();
 const db = require('../config/db'); // Import updated db.js
 const userController = require('../controllers/userController');
 
+
 // Multer setup for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -330,7 +331,7 @@ router.get('/coupon/:couponId', async (req, res) => {
 // Update coupon status
 router.put('/coupon-use/:couponId', async (req, res) => {
   const { couponId } = req.params;
-  const { status, branch, use_location } = req.body; // Include use_location in the request body
+  const { status, use_location } = req.body; // Include use_location in the request body
 
   try {
     const updateQuery = `
@@ -350,6 +351,7 @@ router.put('/coupon-use/:couponId', async (req, res) => {
     res.status(500).send({ error: 'Failed to update coupon status.', details: error.message });
   }
 });
+
 
 
 
